@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container" id='feedapp'> 
+    <div class="row">
+        <div  class="col-md-2">left side  </div>
+        <div  class="col-md-10">
+        <submit-form />
+
+            <div class='wrapper'>
+                <div class='tweet' >
+                    <p v-for='tweet in tweets'>[[ tweet.user ]] [[ tweet.body ]] [[ tweet.timestamp ]]</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+{% load static %}
+<script src="{% static 'js/feed.js' %}"></script>
+{% endblock %}
