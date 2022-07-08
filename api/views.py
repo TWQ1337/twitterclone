@@ -35,7 +35,7 @@ class SearchListProfileAPIView(generics.ListAPIView):
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
         q = self.request.GET.get('q')
-        if q is None:
+        if q == '':
             return queryset.none()
         return queryset.filter(username__icontains=q)
 
