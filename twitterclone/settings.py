@@ -144,12 +144,12 @@ LOGIN_URL = 'authoperations:login'
 
 
 REST_FRAMEFORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'SessionAuthentication',
-    # ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticatedOrReadOnly'
-    # ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 2
+    'PAGE_SIZE': 5
 }

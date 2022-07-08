@@ -1,3 +1,5 @@
+import 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css'
+
 let app = Vue.createApp({
     delimiters: ['[[',']]'],
     data(){
@@ -32,7 +34,7 @@ let app = Vue.createApp({
     },
     },
     template: `<submit-form />           
-                <div v-for='tweet in tweets'>
+                <div v-for='tweet in tweets' class='card'>
                     <h5>by: [[tweet.user]]</h5>
                     <p>[[tweet.body]]<p>
                     <div>[[tweet.timestamp]]</div>

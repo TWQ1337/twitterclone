@@ -1,16 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container" id='feedapp'> 
+
+
+<div class="container">
     <div class="row">
         <div  class="col-md-2">left side  </div>
-        <div  class="col-md-10">
-        <submit-form />
-
-            <div class='wrapper'>
-                <div class='tweet' >
-                    <p v-for='tweet in tweets'>[[ tweet.user ]] [[ tweet.body ]] [[ tweet.timestamp ]]</p>
-
-                </div>
+        <div  class="col-md-5">
+    <div id='feedapp'>
+    </div>
             </div>
         </div>
     </div>
@@ -18,5 +15,118 @@
 {% endblock %}
 {% block script %}
 {% load static %}
-<script src="{% static 'js/feed.js' %}"></script>
+
+<script>
+let app = Vue.createApp({
+    delimiters: ['[[',']]'],
+    data(){
+        return{
+            tweets: [],
+            body: '',
+            user: 'You',
+            timestamp: 'Now'
+        }
+    },
+    methods: {
+        updateTweet(value){
+            var tweet = {
+                'body': value,
+                'user': '{{request.user.username}}',
+                'timestamp': 'just now'
+            }
+            this.tweets.unshift(tweet);
+        },
+        submitTweet(tweet){
+        if (this.body.length > 0){
+            var tweet = {
+                body: tweet,
+                user: '{{request.user.username}}',
+                timestamp: 'just now'
+            }
+            this.tweets.push(tweet);
+        }
+
+    },
+    },
+    template: `<submit-form />
+                <div v-for='tweet in tweets'>
+                    <div class='card'>
+
+                    <div class="card-header">
+                    by: [[tweet.user]]
+                    </div>
+                    <div class="card-body">
+                    <p class="card-text">[[tweet.body]]</p>
+                    </div>
+                    <div class="card-footer text-muted text-end">added: [[tweet.timestamp]]</div>
+                    </div>
+                    <br>
+                </div>
+
+    `,
+    created(){
+            let endpoint = '/api/tweets/'
+            fetch(endpoint)
+            .then(response=>response.json())
+            .then(data=>{
+                for(let index = 0; index < data.length; index++) {
+                    this.tweets.push(data[index])
+                }
+            })
+            .catch(err=>console.log(err))
+        }
+})
+
+app.component('submit-form', {
+    template: `
+        <form @submit.prevent='handleTweet'>
+            <div class="form-floating">
+                <textarea class="form-control" v-model='body' id="floatingTextarea"></textarea>
+                <label for="floatingTextarea">Tweet here, lol</label>
+            </div>
+            <div class='d-flex justify-content-end'>
+            <div class='col-mid-2'>
+            <button class='btn btn-primary m-2'>submit</button>
+            </div>
+            </div>
+        </form>
+        <hr>
+    `,
+    data(){
+        return{
+            body: ''
+        }
+    },
+    methods: {
+        handleTweet(){
+            //packing it into the dict
+            this.$root.updateTweet(this.body)
+            bodyContent = this.body
+            let endpoint = '/api/tweets/'
+            fetch(endpoint, {
+            method: "post",
+            headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+                },
+            body: JSON.stringify({
+                body: bodyContent
+            })
+            })
+            .then(response=>{
+                return response.json
+            })
+            .then(data=>console.log(data))
+            this.body = ''
+    }
+
+}
+})
+
+app.mount('#feedapp')
+
+
+</script>
+<!--<script src="{% static 'js/feed.js' %}"></script>-->
 {% endblock %}

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 class ProfileModel(models.Model):
     user = models.OneToOneField(
         User,
+        related_name='profile',
         on_delete=models.CASCADE
     )
     follows = models.ManyToManyField(
