@@ -41,24 +41,35 @@
         </li>
         -->
       </ul>
-      <form class="d-flex" role="search" id='searchBox'>
-        <input class="form-control me-2" type="search" @keyup.prevent='typeToConsole(querry)' v-model='querry' placeholder="Search" id='searcDropdown'>
-        <div>
-          <li v-for='user in users' v-model='users'>[[user.username]]</li>
+      <div class="d-flex" role="search">
+        <button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">search users</button>
+                  
           
-        </div>
-        <div class="dropdown-menu">>
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        
-        </div>
+          
+
+
+
+            </div>
+          </div>
         <!--<button class="btn btn-outline-success" @click>Search</button>-->
       </form>
     </div>
   </div>
 </nav>
 
+
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">search users</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body" id='searchBox'>
+    <input class="form-control me-2" type="search" @keyup.prevent='typeToConsole(querry)' v-model='querry' placeholder="Search" id='searcDropdown'>
+        
+          <li v-for='user in users' v-model='users'>[[user.username]]</li>
+
+  </div>
+</div>
 
 {% block content %}
 {% endblock %}
