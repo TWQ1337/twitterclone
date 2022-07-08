@@ -65,9 +65,12 @@
   </div>
   <div class="offcanvas-body" id='searchBox'>
     <input class="form-control me-2" type="search" @keyup.prevent='typeToConsole(querry)' v-model='querry' placeholder="Search" id='searcDropdown'>
-        
-          <li v-for='user in users' v-model='users'>[[user.username]]</li>
-
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" v-for='user in users'>
+            <a class="link-dark text-decoration-none" :href="`/profile/` + user.pk">[[user.username]]<br>
+                followers: [[user.followers]]</a>
+            </li>
+    </ul>
   </div>
 </div>
 

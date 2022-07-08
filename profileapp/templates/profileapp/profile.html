@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md">
+            <div>{{object.username}} followers = {{object.profile.followed_by.all.count}}</div>
+        </div>
+        <div class="col-md">
+            <button class="btn btn-primary">Subscrible</button>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+
+</script>
+{% endblock %}

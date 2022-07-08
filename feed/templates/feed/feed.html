@@ -63,6 +63,7 @@ let app = Vue.createApp({
             let endpoint = '/api/tweets/'
             fetch(endpoint)
             .then(response=>response.json())
+            .then(data=>data.results)
             .then(data=>{
                 for(let index = 0; index < data.length; index++) {
                     this.tweets.push(data[index])

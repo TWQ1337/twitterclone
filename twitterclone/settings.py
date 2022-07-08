@@ -142,10 +142,9 @@ LOGOUT_REDIRECT_URL = 'fp'
 LOGIN_REDIRECT_URL = 'fp'
 LOGIN_URL = 'authoperations:login'
 
-
-REST_FRAMEFORK = {
+REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
