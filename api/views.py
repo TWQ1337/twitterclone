@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 # from django.middleware.csrf import get_token
 from rest_framework import generics
 
-
 from tweets.models import TweetModel
 from tweets.serializers import TweetSerializer
 
@@ -21,12 +20,13 @@ class ListCreateTweetsApiView(generics.ListCreateAPIView):
         queryset = super().get_queryset(*args, **kwargs)
         request = self.request
         user = request.user
-        user_ids = [user.id,]
+        user_ids = [user.id, ]
         user_ids = user_ids + list(user.profile.follows.all().values_list('id', flat=True))
         return queryset.filter(created_by__id__in=user_ids)
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
+
 
 class SearchListProfileAPIView(generics.ListAPIView):
     queryset = User.objects.all()
@@ -38,7 +38,6 @@ class SearchListProfileAPIView(generics.ListAPIView):
         if q is None:
             return queryset.none()
         return queryset.filter(username__icontains=q)
-
 
 # def check_update(request):
 #     print(request.user.username)

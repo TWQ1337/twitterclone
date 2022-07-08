@@ -36,17 +36,13 @@ let app = Vue.createApp({
             }
             this.tweets.unshift(tweet);
         },
-        submitTweet(tweet){
-        if (this.body.length > 0){
-            var tweet = {
-                body: tweet,
-                user: '{{request.user.username}}',
-                timestamp: 'just now'
-            }
-            this.tweets.push(tweet);
-        }
+        updateDate(date){
+            console.log(date)    
+            var postDate = date
+            this.tweets[0].timestamp = postDate
 
     },
+
     },
     template: `<submit-form />
                 <div v-for='tweet in tweets'>
@@ -115,9 +111,15 @@ app.component('submit-form', {
             })
             })
             .then(response=>{
-                return response.json
+                var tweetResponse = response.json()
+                return tweetResponse
             })
-            .then(data=>console.log(data))
+            .then(data=>{
+            console.log(data)
+            console.log(data.timestamp)
+            this.$root.updateDate(data.timestamp)
+        })
+
             this.body = ''
     }
 
