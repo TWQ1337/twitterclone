@@ -32,14 +32,21 @@ class SearchListProfileAPIView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserModelSerializer
 
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        q = self.request.GET.get('q')
+        if q is None:
+            return queryset.none()
+        return queryset.filter(username__icontains=q)
 
-def check_update(request):
-    print(request.user.username)
-    print(request.META)
-    print(request.read())
-    return HttpResponse('bruh')
 
-
-def get_csrf_token(request):
-    token = get_token(request)
-    return JsonResponse({'token': token})
+# def check_update(request):
+#     print(request.user.username)
+#     print(request.META)
+#     print(request.read())
+#     return HttpResponse('bruh')
+#
+#
+# def get_csrf_token(request):
+#     token = get_token(request)
+#     return JsonResponse({'token': token})
