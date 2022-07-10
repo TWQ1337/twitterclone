@@ -1,14 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
+<div class="container" id='profile'>
     <div class="row justify-content-center">
         <div class="col-md">
             <div>{{object.username}} followers = {{object.profile.followed_by.all.count}}</div>
         </div>
-        <div class="col-md">
-            <button class="btn btn-primary">Subscrible</button>
+        <div class="col-md" >
+            {% if request.user.id != object.id %}
+            <button @click='subscribeSwitch' class="btn btn-primary">Subscrible</button>
+            {% endif %}
         </div>
+        <div v-for='tweet in tweets'>
+            <div class='card'>
 
+            <div class="card-header">
+            by: [[tweet.user]]
+            </div>
+            <div class="card-body">
+            <p class="card-text">[[tweet.body]]</p>
+            </div>
+            <div class="card-footer text-muted text-end">added: [[tweet.timestamp]]</div>
+            </div>
+            <br>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -16,7 +30,53 @@
 {% block script %}
 
 <script>
-
-
+const profileTweets = Vue.createApp({
+    delimiters: ['[[',']]'],
+    data() {
+        return {
+            pk: {{object.pk}},
+            username: '',
+            followers: 0,
+            subscribed: false,            
+            tweets: []
+        }
+    },
+    methods: {
+        subscribeSwitch(){
+            this.subscribed = !this.subscribed
+            const subscribeEndpoint = `/api/subscribe/`
+            fetch(subscribeEndpoint, {
+                method: "post",
+                headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                    },
+                body: JSON.stringify({
+                    profile_id: this.pk,
+                    user_id: {{request.user.id}}
+                })
+                
+            })
+            .then(response=>response.json())
+            .then(data=>console.log(data))
+            
+        }
+    },
+    created(){
+        let endpoint  = `/api/profiledata/${this.pk}`
+        fetch(endpoint)
+        .then(response=>response.json())
+        .then(data=>{
+            this.followers = data.followers
+            this.username = data.username
+            for(let i = 0; i < data.tweets.length; i++){
+                this.tweets.push(data.tweets[i])
+            }
+            
+        })
+    }
+})
+profileTweets.mount('#profile')
 </script>
 {% endblock %}
