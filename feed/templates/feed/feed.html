@@ -31,6 +31,7 @@ let app = Vue.createApp({
             var tweet = {
                 'body': value,
                 'user': '{{request.user.username}}',
+                'user_id': {{request.user.id}},
                 'timestamp': 'just now'
             }
             this.tweets.unshift(tweet);
@@ -48,7 +49,7 @@ let app = Vue.createApp({
                     <div class='card'>
 
                     <div class="card-header">
-                    by: [[tweet.user]]
+                    by: <a :href="/profile/+ [[tweet.user_id]]"> [[tweet.user]] </a>
                     </div>
                     <div class="card-body">
                     <p class="card-text">[[tweet.body]]</p>
