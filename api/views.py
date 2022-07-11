@@ -26,6 +26,10 @@ class ListCreateTweetsApiView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
+class MainTweetListApiView(generics.ListAPIView):
+    serializer_class = TweetSerializer
+    queryset = TweetModel.objects.all()
+
 
 class SearchListProfileAPIView(generics.ListAPIView):
     queryset = User.objects.all()
