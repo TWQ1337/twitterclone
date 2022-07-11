@@ -7,7 +7,7 @@
         </div>
         <div class="col-md" >
             {% if request.user.id != object.id %}
-            <button @click='subscribeSwitch' class="btn btn-primary">Subscrible</button>
+            <button @click='subscribeSwitch' :class="`btn btn-`+ buttonColor">[[subscribe_text]]</button>
             {% endif %}
         </div>
         <div v-for='tweet in tweets'>
@@ -38,7 +38,9 @@ const profileTweets = Vue.createApp({
             username: '',
             followers: 0,
             subscribed: false,            
-            tweets: []
+            tweets: [],
+            subscribe_text: 'Subscribe',
+            buttonColor: 'primary'
         }
     },
     methods: {
@@ -59,7 +61,16 @@ const profileTweets = Vue.createApp({
                 
             })
             .then(response=>response.json())
-            .then(data=>console.log(data))
+            .then(data=>{
+                this.subscribed = data.sub_status
+                if (this.subscribed == true ){
+                    this.subscribe_text = 'UnSubscribe'
+                    this.buttonColor = 'danger'
+                } else{
+                  this.subscribe_text = 'Subscribe'
+                  this.buttonColor = 'primary'
+                }
+                })
             
         }
     },

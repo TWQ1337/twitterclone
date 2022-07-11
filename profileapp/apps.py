@@ -7,3 +7,7 @@ class ProfileappConfig(AppConfig):
 
     def ready(self):
         import profileapp.signals
+
+
+
+

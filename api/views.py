@@ -47,10 +47,43 @@ class ProfileAPIView(generics.RetrieveAPIView):
 
 @api_view(['POST'])
 def subscribe_api(request, *args, **kwargs) -> Response:
-    context: dict = {'response': 0}
+    '''
+    Reverses subscription status
+    When gets a request
+    '''
+    # Setting up variables
+    context: dict = {}
+    data: dict = request.data
+    sub_status: bool = bool()
+    # Check if request data contains user id and profile id
+    if not 'profile_id' in data and not 'user_id' in data:
+        return Response({
+            'Error': 'Bad Request'
+        })
     # If user id is user id reject
-    print(request.user)
-    print(request.body)
+
+    if data['profile_id'] == data['user_id']:
+        return Response({
+            'Error': 'Cannot\'t follow yourself'
+        })
+
+    try:
+        user = User.objects.get(id=data['user_id'])
+        profile = ProfileModel.objects.get(user__id=data['profile_id'])
+    except:
+        return Response({
+            'Error': 'Wrong ids'
+        })
+
+    if user.profile.follows.all().filter(user__id=data['profile_id']).exists():
+        user.profile.follows.remove(profile)
+        sub_status = False
+    else:
+        user.profile.follows.add(profile)
+        sub_status = True
+    context.update({
+        'sub_status': sub_status
+    })
     return Response(context)
 
 # class SubscribeProfileApiView(generics.CreateAPIView):
