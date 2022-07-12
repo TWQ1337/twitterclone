@@ -24,28 +24,67 @@
 
 {% block script%}
 <script>
+function throttle(fn, delay = 200){
+    let shouldWait = false
+    return (...args) => {
+        if(shouldWait) return
+        fn(...args)
+        shouldWait = true
+        setTimeout(() => {
+            shouldWait = false
+        }, delay)
+    }
+
+}
+
+
+
 let app = Vue.createApp({
     delimiters: ['[[',']]'],
     data(){
         return{
-            tweets: []
+            tweets: [],
+            nextEndpoint: '',
+            shouldWait: true
         }
     },
     methods: {
+        handleScroll() {
+			if (
+				window.scrollY + window.innerHeight >=
+				document.body.scrollHeight - 50
+			) {
+                fetch(this.nextEndpoint)
+                .then(data=>data.json())
+                .then(data=>{
+
+                    this.nextEndpoint = data.next
+                    this.tweets.push(...data.results)
+
+                })
+			}
+		}
     },
-    created(){
+    mounted(){
+            window.addEventListener("scroll", throttle(this.handleScroll, 20))
             let endpoint = '/api/alltweets/'
             fetch(endpoint)
             .then(response=>response.json())
-            .then(data=>data.results)
             .then(data=>{
-                for(let index = 0; index < data.length; index++) {
-                    this.tweets.push(data[index])
-                }
+            this.nextEndpoint = data.next
+            return data.results
+            })
+            .then(data=>{
+                    console.log(this.nextEndpoint)
+                    this.tweets.push(...data)
             })
             .catch(err=>console.log(err))
+
         }
     })
+
+
+
     app.mount('#mainPage')
     //code for infinite scroll
 
