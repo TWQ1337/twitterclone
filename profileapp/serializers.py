@@ -4,8 +4,10 @@ from django.contrib.auth.models import User
 
 from tweets.serializers import TweetSerializer
 
+
 class UserModelSerializer(serializers.ModelSerializer):
     followers = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = User
         fields = [
@@ -23,6 +25,7 @@ class UserModelSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     followers = serializers.SerializerMethodField(read_only=True)
     tweets = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = User
         fields = [
@@ -43,11 +46,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return TweetSerializer(tweets_qs, many=True, context=self.context).data
 
 
-
 class FollowDataSerializer(serializers.ModelSerializer):
     profile_id = serializers.SerializerMethodField(read_only=True)
     subscriber_id = serializers.CharField(source='pk', read_only=True)
     subscribed = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = User
         fields = [
@@ -56,5 +59,5 @@ class FollowDataSerializer(serializers.ModelSerializer):
             'subscribed'
         ]
 
-    def get_profile_id():
+    def get_profile_id(self, obj):
         return 0

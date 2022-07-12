@@ -26,6 +26,7 @@ class ListCreateTweetsApiView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
+
 class MainTweetListApiView(generics.ListAPIView):
     serializer_class = TweetSerializer
     queryset = TweetModel.objects.all()
@@ -51,10 +52,10 @@ class ProfileAPIView(generics.RetrieveAPIView):
 
 @api_view(['POST'])
 def subscribe_api(request, *args, **kwargs) -> Response:
-    '''
+    """
     Reverses subscription status
     When gets a request
-    '''
+    """
     # Setting up variables
     context: dict = {}
     data: dict = request.data
@@ -90,19 +91,3 @@ def subscribe_api(request, *args, **kwargs) -> Response:
     })
     return Response(context)
 
-# class SubscribeProfileApiView(generics.CreateAPIView):
-#     queryset = User.objects.all()
-#     serializer_class =
-#     lookup_field = 'pk'
-
-
-# def check_update(request):
-#     print(request.user.username)
-#     print(request.META)
-#     print(request.read())
-#     return HttpResponse('bruh')
-#
-#
-# def get_csrf_token(request):
-#     token = get_token(request)
-#     return JsonResponse({'token': token})
